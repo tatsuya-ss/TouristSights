@@ -15,6 +15,13 @@ class SightAdapter(
     private val sights: List<Sight>
 ): RecyclerView.Adapter<SightAdapter.ViewHolder>() {
 
+    // コールバックを保持するための関数型
+    private var listener: ((Int) -> Unit)? = null
+    // コールバックの設定
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
+        this.listener = listener
+    }
+
     // セルに使用するビューを保持
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.name)
@@ -39,6 +46,9 @@ class SightAdapter(
             "drawable", context.packageName
         )
         holder.image.setImageResource(imageResource)
+        holder.itemView.setOnClickListener {
+            listener?.invoke(position)
+        }
     }
 
     override fun getItemCount(): Int = sights.size
